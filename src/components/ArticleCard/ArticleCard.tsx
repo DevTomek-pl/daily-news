@@ -19,10 +19,12 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
 
   return (
     <div className="article-card">
-      <img src={article.imageUrl} alt={article.title} className="article-image" />
+      <div className="article-image-wrapper">
+        <span className="article-source">{article.sourceName}</span>
+        <img src={article.imageUrl} alt={article.title} className="article-image" />
+      </div>
       <div className="article-content">
         <div className="article-meta">
-          <span className="article-source">{article.sourceName}</span>
           <span className="article-date">{formatDate(article.date)}</span>
         </div>
         <h2 className="article-title">{article.title}</h2>
