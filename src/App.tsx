@@ -4,6 +4,7 @@ import type { Article } from './types/Article';
 import { ArticleFetcher } from './services/ArticleFetcher';
 import sourceConfigs from './config/sources.json';
 import './App.css';
+import { ScrollToTopArrow } from './components/ScrollToTopArrow';
 
 function App() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -49,6 +50,7 @@ function App() {
           <ArticleCard key={article.id} article={article} />
         ))}
       </div>
+      <ScrollToTopArrow />
     </div>
   );
 }
