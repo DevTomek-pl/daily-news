@@ -69,46 +69,7 @@ export class ArticleFetcher {
     const rawDate = dateEl?.getAttribute('datetime') || dateEl?.textContent || '';
     
     // Format date using the dateFormat from config if available
-    let formattedDate = new Date().toISOString();
-    if (rawDate) {
-      if (this.config.dateFormat) {
-        try {
-          // Clean up the raw date string
-          let processedDate = rawDate.trim();
-          
-          // Special handling for Polish date format with 'r.' suffix
-          if (this.config.dateFormat.includes("'r.'")) {
-            processedDate = processedDate.replace(' r.', '');
-            const format = this.config.dateFormat.replace(" 'r.'", "");
-            const parsedDate = dayjs(processedDate, format);
-            
-            if (parsedDate.isValid()) {
-              formattedDate = parsedDate.toISOString();
-            } else {
-              console.warn(`Invalid date for ${this.config.name}: "${rawDate}" with format "${format}"`);
-            }
-          } else {
-            // Standard format parsing
-            const parsedDate = dayjs(processedDate, this.config.dateFormat);
-            if (parsedDate.isValid()) {
-              formattedDate = parsedDate.toISOString();
-            }
-          }
-        } catch (err) {
-          console.warn(`Failed to parse date for ${this.config.name}: "${rawDate}"`, err);
-        }
-      } else {
-        // Standard date parsing without format
-        try {
-          const standardDate = new Date(rawDate);
-          if (!isNaN(standardDate.getTime())) {
-            formattedDate = standardDate.toISOString();
-          }
-        } catch (err) {
-          console.warn(`Failed to parse date for ${this.config.name}: "${rawDate}"`, err);
-        }
-      }
-    }
+    const formattedDate = this.parseDate(rawDate);
 
     return {
       id: articleUrl,
@@ -119,6 +80,86 @@ export class ArticleFetcher {
       articleUrl,
       sourceName: this.config.name
     };
+  }
+
+  /**
+   * Parse the date string using the configured date format
+   * @param rawDate The raw date string from the article
+   * @returns ISO formatted date string
+   */
+  private parseDate(rawDate: string): string {
+    // Default to current date if parsing fails
+    if (!rawDate) {
+      return new Date().toISOString();
+    }
+
+    try {
+      const cleanDate = rawDate.trim();
+      
+      // If a specific date format is specified in config
+      if (this.config.dateFormat) {
+        return this.parseDateWithFormat(cleanDate, this.config.dateFormat);
+      } 
+      
+      // Try standard date parsing if no format specified
+      return this.parseDateStandard(cleanDate);
+    } catch (err) {
+      console.warn(`Failed to parse date for ${this.config.name}: "${rawDate}"`, err);
+      return new Date().toISOString();
+    }
+  }
+
+  /**
+   * Parse a date string with a specific format
+   */
+  private parseDateWithFormat(dateString: string, format: string): string {
+    // Handle special case for Polish dates with 'r.' suffix
+    if (format.includes("'r.'")) {
+      return this.parsePolishDate(dateString, format);
+    }
+    
+    // Standard format parsing
+    const parsedDate = dayjs(dateString, format);
+    
+    if (parsedDate.isValid()) {
+      return parsedDate.toISOString();
+    }
+    
+    console.warn(`Invalid date for ${this.config.name}: "${dateString}" with format "${format}"`);
+    return new Date().toISOString();
+  }
+
+  /**
+   * Parse Polish date format with 'r.' suffix
+   */
+  private parsePolishDate(dateString: string, format: string): string {
+    // Remove the 'r.' suffix from the date string
+    const processedDate = dateString.replace(' r.', '');
+    // Remove the 'r.' suffix from the format
+    const processedFormat = format.replace(" 'r.'", "");
+    
+    const parsedDate = dayjs(processedDate, processedFormat);
+    
+    if (parsedDate.isValid()) {
+      return parsedDate.toISOString();
+    }
+    
+    console.warn(`Invalid Polish date for ${this.config.name}: "${dateString}" with format "${format}"`);
+    return new Date().toISOString();
+  }
+
+  /**
+   * Parse a date string using standard JavaScript Date
+   */
+  private parseDateStandard(dateString: string): string {
+    const standardDate = new Date(dateString);
+    
+    if (!isNaN(standardDate.getTime())) {
+      return standardDate.toISOString();
+    }
+    
+    console.warn(`Invalid standard date for ${this.config.name}: "${dateString}"`);
+    return new Date().toISOString();
   }
 
   private isValidArticle(article: Article): boolean {
@@ -142,3 +183,4 @@ export class ArticleFetcher {
     }];
   }
 }
+
