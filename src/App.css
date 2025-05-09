@@ -40,3 +40,12 @@
 .read-the-docs {
   color: #888;
 }
+
+.newspaper-header {
+  font-family: 'UnifrakturCook', serif;
+  font-size: 3rem;
+  letter-spacing: 2px;
+  text-align: center;
+  margin: 2rem 0;
+  color: #1a1a1a;
+}
