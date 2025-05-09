@@ -1,6 +1,7 @@
 export interface ArticleSourceConfig {
   name: string;
   baseUrl: string;
+  dateFormat?: string;
   selectors: {
     container: string;
     title: string;
@@ -12,6 +13,5 @@ export interface ArticleSourceConfig {
   transformers?: {
     articleUrl?: string;
     imageUrl?: string;
-    date?: string;
   };
 }

@@ -3,6 +3,7 @@
     {
       "name": "XDA Developers",
       "baseUrl": "/api/xda-developers",
+      "dateFormat": "YYYY-MM-DDTHH:mm:ssZ",
       "selectors": {
         "container": "body > main > section.wrapper.w-section-latest > div > div > div.sentinel-home-list",
         "title": "div > h5 > a",
@@ -19,6 +20,7 @@
     {
       "name": "Łask Online",
       "baseUrl": "/api/laskonline",
+      "dateFormat": "HH:mm, DD.MM.YYYY 'r.'",
       "selectors": {
         "container": "#lewa_kolumna",
         "title": "div > h2 > a",

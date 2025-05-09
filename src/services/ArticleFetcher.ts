@@ -1,5 +1,10 @@
 import type { Article } from '../types/Article';
 import type { ArticleSourceConfig } from '../types/ArticleSource';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+// Enable the customParseFormat plugin
+dayjs.extend(customParseFormat);
 
 export class ArticleFetcher {
   private readonly config: ArticleSourceConfig;
@@ -61,14 +66,56 @@ export class ArticleFetcher {
     const imageUrl = rawImage?.getAttribute('src') || rawImage?.getAttribute('data-src') || '';
     
     const dateEl = element.querySelector(selectors.date);
-    const date = dateEl?.getAttribute('datetime') || dateEl?.textContent || new Date().toISOString();
+    const rawDate = dateEl?.getAttribute('datetime') || dateEl?.textContent || '';
+    
+    // Format date using the dateFormat from config if available
+    let formattedDate = new Date().toISOString();
+    if (rawDate) {
+      if (this.config.dateFormat) {
+        try {
+          // Clean up the raw date string
+          let processedDate = rawDate.trim();
+          
+          // Special handling for Polish date format with 'r.' suffix
+          if (this.config.dateFormat.includes("'r.'")) {
+            processedDate = processedDate.replace(' r.', '');
+            const format = this.config.dateFormat.replace(" 'r.'", "");
+            const parsedDate = dayjs(processedDate, format);
+            
+            if (parsedDate.isValid()) {
+              formattedDate = parsedDate.toISOString();
+            } else {
+              console.warn(`Invalid date for ${this.config.name}: "${rawDate}" with format "${format}"`);
+            }
+          } else {
+            // Standard format parsing
+            const parsedDate = dayjs(processedDate, this.config.dateFormat);
+            if (parsedDate.isValid()) {
+              formattedDate = parsedDate.toISOString();
+            }
+          }
+        } catch (err) {
+          console.warn(`Failed to parse date for ${this.config.name}: "${rawDate}"`, err);
+        }
+      } else {
+        // Standard date parsing without format
+        try {
+          const standardDate = new Date(rawDate);
+          if (!isNaN(standardDate.getTime())) {
+            formattedDate = standardDate.toISOString();
+          }
+        } catch (err) {
+          console.warn(`Failed to parse date for ${this.config.name}: "${rawDate}"`, err);
+        }
+      }
+    }
 
     return {
       id: articleUrl,
       title,
       description: element.querySelector(selectors.description)?.textContent?.trim() || '',
       imageUrl: this.parsedTransformers.imageUrl ? this.parsedTransformers.imageUrl(imageUrl) : imageUrl,
-      date: this.parsedTransformers.date ? this.parsedTransformers.date(date) : date,
+      date: formattedDate,
       articleUrl,
       sourceName: this.config.name
     };
@@ -95,4 +142,3 @@ export class ArticleFetcher {
     }];
   }
 }
-
