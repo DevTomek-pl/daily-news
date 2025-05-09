@@ -1,4 +1,4 @@
-import { type Article } from '../../types/Article';
+import type { Article } from '../../types/Article';
 import './ArticleCard.css';
 
 interface ArticleCardProps {
@@ -23,3 +23,4 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
     </div>
   );
 };
+
