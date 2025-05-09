@@ -61,8 +61,8 @@ export class ArticleFetcher {
     const imageUrl = rawImage?.getAttribute('src') || rawImage?.getAttribute('data-src') || '';
     
     const dateEl = element.querySelector(selectors.date);
-    const date = dateEl?.getAttribute('datetime') || new Date().toISOString();
-    
+    const date = dateEl?.getAttribute('datetime') || dateEl?.textContent || new Date().toISOString();
+
     return {
       id: articleUrl,
       title,
