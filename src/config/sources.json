@@ -15,6 +15,22 @@
         "articleUrl": "url.startsWith('http') ? url : `https://www.xda-developers.com${url}`",
         "imageUrl": "url"
       }
+    },
+    {
+      "name": "Łask Online",
+      "baseUrl": "/api/laskonline",
+      "selectors": {
+        "container": "#lewa_kolumna",
+        "title": "div > h2 > a",
+        "description": "div > p",
+        "image": "div > a > img",
+        "date": "div > dl > dd",
+        "link": "div > h2 > a"
+      },
+      "transformers": {
+        "articleUrl": "url.startsWith('http') ? url : `https://www.laskonline.pl/${url}`",
+        "imageUrl": "url.startsWith('http') ? url : `https://www.laskonline.pl${url}`"
+      }
     }
   ]
 }
