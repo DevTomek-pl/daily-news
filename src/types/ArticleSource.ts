@@ -7,7 +7,6 @@ export interface ArticleSourceConfig {
     description: string;
     image: string;
     date: string;
-    author?: string;
     link: string;
   };
   transformers?: {
@@ -15,5 +14,4 @@ export interface ArticleSourceConfig {
     imageUrl?: string;
     date?: string;
   };
-  defaultAuthor?: string;
 }

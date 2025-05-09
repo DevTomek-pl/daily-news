@@ -5,5 +5,5 @@ export interface Article {
   description: string;
   imageUrl: string;
   articleUrl: string;
-  author: string;
+  sourceName: string;
 }

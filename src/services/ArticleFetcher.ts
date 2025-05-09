@@ -51,7 +51,7 @@ export class ArticleFetcher {
   }
 
   private parseArticle(element: Element): Article {
-    const { selectors, defaultAuthor } = this.config;
+    const { selectors } = this.config;
     
     const title = element.querySelector(selectors.title)?.textContent?.trim() || '';
     const rawUrl = element.querySelector(selectors.link)?.getAttribute('href') || '';
@@ -70,7 +70,7 @@ export class ArticleFetcher {
       imageUrl: this.parsedTransformers.imageUrl ? this.parsedTransformers.imageUrl(imageUrl) : imageUrl,
       date: this.parsedTransformers.date ? this.parsedTransformers.date(date) : date,
       articleUrl,
-      author: (element.querySelector(selectors.author)?.textContent?.trim() ?? defaultAuthor ?? 'Unknown')
+      sourceName: this.config.name
     };
   }
 
@@ -91,7 +91,8 @@ export class ArticleFetcher {
       description: 'Unable to fetch articles at this time. Please try again later.',
       imageUrl: 'https://picsum.photos/800/400',
       articleUrl: this.config.baseUrl,
-      author: this.config.defaultAuthor || 'System'
+      sourceName: this.config.name
     }];
   }
 }
+

@@ -22,7 +22,7 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
         <h2 className="article-title">{article.title}</h2>
         <div className="article-meta">
           <span className="article-date">{formatDate(article.date)}</span>
-          <span className="article-author">By {article.author}</span>
+          <span className="article-source">{article.sourceName}</span>
         </div>
         <p className="article-description">{article.description}</p>
         <a href={article.articleUrl} className="article-link" target="_blank" rel="noopener noreferrer">

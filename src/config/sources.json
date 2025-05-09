@@ -14,8 +14,7 @@
       "transformers": {
         "articleUrl": "url.startsWith('http') ? url : `https://www.xda-developers.com${url}`",
         "imageUrl": "url"
-      },
-      "defaultAuthor": "XDA Staff"
+      }
     }
   ]
 }
