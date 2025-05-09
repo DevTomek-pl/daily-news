@@ -28,10 +28,9 @@
 
 .article-meta {
   display: flex;
-  justify-content: space-between;
-  color: #666;
-  font-size: 0.875rem;
-  margin-bottom: 1rem;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
 }
 
 .article-description {
@@ -53,3 +52,19 @@
 .article-link:hover {
   background: #333;
 }
+
+.article-source {
+  background-color: #2196f3;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.article-date {
+  color: #666;
+  font-size: 0.9rem;
+}
+

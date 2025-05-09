@@ -19,11 +19,11 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
     <div className="article-card">
       <img src={article.imageUrl} alt={article.title} className="article-image" />
       <div className="article-content">
-        <h2 className="article-title">{article.title}</h2>
         <div className="article-meta">
-          <span className="article-date">{formatDate(article.date)}</span>
           <span className="article-source">{article.sourceName}</span>
+          <span className="article-date">{formatDate(article.date)}</span>
         </div>
+        <h2 className="article-title">{article.title}</h2>
         <p className="article-description">{article.description}</p>
         <a href={article.articleUrl} className="article-link" target="_blank" rel="noopener noreferrer">
           Read more
