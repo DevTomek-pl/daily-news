@@ -1,0 +1,21 @@
+{
+  "sources": [
+    {
+      "name": "XDA Developers",
+      "baseUrl": "/api/xda-developers",
+      "selectors": {
+        "container": "body > main > section.wrapper.w-section-latest > div > div > div.sentinel-home-list",
+        "title": "div > h5 > a",
+        "description": "div > p",
+        "image": "a > div > div > figure > picture > img",
+        "date": "div > div.w-display-card-details > div > div.meta_txt.article-date > time",
+        "link": "div > h5 > a"
+      },
+      "transformers": {
+        "articleUrl": "url.startsWith('http') ? url : `https://www.xda-developers.com${url}`",
+        "imageUrl": "url"
+      },
+      "defaultAuthor": "XDA Staff"
+    }
+  ]
+}

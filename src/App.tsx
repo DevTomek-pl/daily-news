@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { ArticleCard } from './components/ArticleCard/ArticleCard';
 import type { Article } from './types/Article';
-import { fetchXDAArticles } from './services/xdaArticleService';
+import { ArticleFetcher } from './services/ArticleFetcher';
+import sourceConfigs from './config/sources.json';
 import './App.css';
 
 function App() {
@@ -13,11 +14,19 @@ function App() {
     const loadArticles = async () => {
       try {
         setIsLoading(true);
-        const xdaArticles = await fetchXDAArticles();
-        // Sort articles from newest to oldest
-        const sortedArticles = [...xdaArticles].sort((a, b) => 
+        
+        const allArticles: Article[] = [];
+        
+        for (const sourceConfig of sourceConfigs.sources) {
+          const fetcher = new ArticleFetcher(sourceConfig);
+          const sourceArticles = await fetcher.fetchArticles();
+          allArticles.push(...sourceArticles);
+        }
+
+        const sortedArticles = allArticles.sort((a, b) => 
           new Date(b.date).getTime() - new Date(a.date).getTime()
         );
+        
         setArticles(sortedArticles);
       } catch (err) {
         setError('Failed to load articles');
