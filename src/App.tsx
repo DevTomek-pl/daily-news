@@ -14,7 +14,11 @@ function App() {
       try {
         setIsLoading(true);
         const xdaArticles = await fetchXDAArticles();
-        setArticles(xdaArticles);
+        // Sort articles from newest to oldest
+        const sortedArticles = [...xdaArticles].sort((a, b) => 
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+        setArticles(sortedArticles);
       } catch (err) {
         setError('Failed to load articles');
         console.error(err);
