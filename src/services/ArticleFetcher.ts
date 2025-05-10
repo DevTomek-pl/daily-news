@@ -36,7 +36,11 @@ export class ArticleFetcher {
         : this.config.baseUrl;
 
       const response = await fetch(url);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
+      if (!response.ok) {
+        const errorMessage = this.getErrorMessage(response.status);
+        throw new Error(errorMessage);
+      }
       
       const html = await response.text();
       const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -51,7 +55,28 @@ export class ArticleFetcher {
         .filter(article => this.isValidArticle(article));
     } catch (error) {
       console.error(`Error fetching articles from ${this.config.name}:`, error);
-      return this.getFallbackArticle();
+      throw error; // Przekazujemy błąd dalej, aby App mógł go obsłużyć
+    }
+  }
+
+  private getErrorMessage(status: number): string {
+    switch (status) {
+      case 403:
+        return `Access Forbidden (403) - The server blocked access to ${this.config.name}. This might be due to CORS restrictions or rate limiting.`;
+      case 404:
+        return `Not Found (404) - The source ${this.config.name} is not available at this URL.`;
+      case 429:
+        return `Too Many Requests (429) - Rate limit exceeded for ${this.config.name}. Please try again later.`;
+      case 500:
+        return `Server Error (500) - ${this.config.name}'s server encountered an error.`;
+      case 502:
+        return `Bad Gateway (502) - Unable to reach ${this.config.name}'s server.`;
+      case 503:
+        return `Service Unavailable (503) - ${this.config.name} is temporarily unavailable.`;
+      case 504:
+        return `Gateway Timeout (504) - Request to ${this.config.name} timed out.`;
+      default:
+        return `HTTP error ${status} when fetching articles from ${this.config.name}`;
     }
   }
 
