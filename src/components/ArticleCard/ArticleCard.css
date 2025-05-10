@@ -39,7 +39,7 @@
 }
 
 .article-card:hover .article-image {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
 .article-content {
@@ -123,6 +123,81 @@
   font-weight: 500;
 }
 
+.clickable {
+  cursor: pointer;
+  position: relative;
+}
+
+.article-title.clickable {
+  position: relative;
+  display: inline-block;
+  transition: all 0.3s ease;
+  padding-right: 32px; /* Dodaję padding dla miejsca na strzałkę */
+}
+
+.article-title.clickable:hover {
+  color: #2196f3;
+  transform: translateX(8px);
+}
+
+.article-title.clickable::after {
+  content: '→';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.article-title.clickable:hover::after {
+  opacity: 1;
+  right: -8px;
+}
+
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+.article-image-wrapper:hover .image-overlay {
+  opacity: 1;
+}
+
+.read-indicator {
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.article-image-wrapper:hover .read-indicator {
+  transform: translateY(0);
+}
+
+.read-indicator svg {
+  transition: transform 0.3s ease;
+}
+
+.article-image-wrapper:hover .read-indicator svg {
+  animation: bounceRight 1s infinite;
+}
+
+@keyframes bounceRight {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(6px); }
+}
+
 @media (max-width: 768px) {
   .article-card {
     max-width: 100%;
@@ -138,5 +213,15 @@
   
   .article-title {
     font-size: 1.2rem;
+  }
+}
+
+@media (hover: none) {
+  .image-overlay {
+    display: none;
+  }
+  
+  .article-title.clickable::after {
+    display: none;
   }
 }
