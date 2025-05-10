@@ -52,10 +52,10 @@ export class ArticleFetcher {
       
       return articleElements
         .map(element => this.parseArticle(element))
-        .filter(article => this.isValidArticle(article));
+        .filter(article => article.title && article.articleUrl);
     } catch (error) {
       console.error(`Error fetching articles from ${this.config.name}:`, error);
-      throw error; // Przekazujemy błąd dalej, aby App mógł go obsłużyć
+      throw error;
     }
   }
 
@@ -106,27 +106,5 @@ export class ArticleFetcher {
       sourceName: this.config.name,
       category: this.config.category
     };
-  }
-
-  private isValidArticle(article: Article): boolean {
-    return Boolean(
-      article.title &&
-      article.articleUrl &&
-      !article.articleUrl.includes('#') &&
-      article.articleUrl !== this.config.baseUrl
-    );
-  }
-
-  private getFallbackArticle(): Article[] {
-    return [{
-      id: 'fallback',
-      title: `${this.config.name} - Temporary Unavailable`,
-      date: new Date().toISOString(),
-      description: 'Unable to fetch articles at this time. Please try again later.',
-      imageUrl: 'https://picsum.photos/800/400',
-      articleUrl: this.config.baseUrl,
-      sourceName: this.config.name,
-      category: this.config.category
-    }];
   }
 }
