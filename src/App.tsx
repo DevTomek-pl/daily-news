@@ -162,13 +162,14 @@ function App() {
       } else {
         newSources.add(sourceName);
       }
+
+      // Inside the callback, we have access to the new sources
+      const filtered = filterArticles(articles, selectedCategory, newSources);
+      setVisibleArticles(filtered.slice(0, ARTICLES_PER_PAGE));
+      setHasMore(filtered.length > ARTICLES_PER_PAGE);
+
       return newSources;
     });
-
-    // Reset articles and pagination when sources change
-    const filtered = filterArticles(articles, selectedCategory, enabledSources);
-    setVisibleArticles(filtered.slice(0, ARTICLES_PER_PAGE));
-    setHasMore(filtered.length > ARTICLES_PER_PAGE);
 
     // Reset intersection observer
     if (observer.current) {
@@ -245,8 +246,8 @@ function App() {
                 key={article.articleUrl} 
                 article={article}
                 onBookmarkChange={() => {
-                  // No need to refresh if we're on the home page
-                  if (currentPage === 'bookmarks') {
+                  // Only refresh visible articles if we're not on the home page
+                  if (currentPage !== 'home') {
                     const filtered = filterArticles(articles, selectedCategory, enabledSources);
                     setVisibleArticles(filtered.slice(0, ARTICLES_PER_PAGE));
                   }
