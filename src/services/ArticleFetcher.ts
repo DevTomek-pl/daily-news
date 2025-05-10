@@ -74,7 +74,8 @@ export class ArticleFetcher {
       imageUrl: this.parsedTransformers.imageUrl ? this.parsedTransformers.imageUrl(imageUrl) : imageUrl,
       date: formattedDate,
       articleUrl,
-      sourceName: this.config.name
+      sourceName: this.config.name,
+      category: this.config.category
     };
   }
 
@@ -95,7 +96,8 @@ export class ArticleFetcher {
       description: 'Unable to fetch articles at this time. Please try again later.',
       imageUrl: 'https://picsum.photos/800/400',
       articleUrl: this.config.baseUrl,
-      sourceName: this.config.name
+      sourceName: this.config.name,
+      category: this.config.category
     }];
   }
 }

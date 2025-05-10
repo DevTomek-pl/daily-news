@@ -1,5 +1,6 @@
 export interface ArticleSourceConfig {
   name: string;
+  category: string;
   baseUrl: string;
   dateFormat?: string;
   selectors: {
@@ -15,3 +16,4 @@ export interface ArticleSourceConfig {
     imageUrl?: string;
   };
 }
+

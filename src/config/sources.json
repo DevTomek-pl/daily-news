@@ -2,6 +2,7 @@
   "sources": [
     {
       "name": "XDA Developers",
+      "category": "Technology",
       "baseUrl": "/api/xda-developers",
       "dateFormat": "YYYY-MM-DDTHH:mm:ssZ",
       "selectors": {
@@ -19,6 +20,7 @@
     },
     {
       "name": "Łask Online",
+      "category": "News",
       "baseUrl": "/api/laskonline",
       "dateFormat": "HH:mm, DD.MM.YYYY 'r.'",
       "selectors": {

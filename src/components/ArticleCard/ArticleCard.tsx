@@ -21,10 +21,16 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
     window.open(article.articleUrl, '_blank', 'noopener,noreferrer');
   };
 
+  const getCategoryClass = (category: string): string => {
+    return `article-source category-${category.toLowerCase()}`;
+  };
+
   return (
     <div className="article-card">
       <div className="article-image-wrapper clickable" onClick={handleArticleClick}>
-        <span className="article-source">{article.sourceName}</span>
+        <span className={getCategoryClass(article.category)}>
+          {article.sourceName}
+        </span>
         <img src={article.imageUrl} alt={article.title} className="article-image" />
         <div className="image-overlay">
           <span className="read-indicator">
@@ -47,3 +53,4 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
     </div>
   );
 };
+

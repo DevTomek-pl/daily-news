@@ -183,6 +183,17 @@
   50% { transform: translateX(6px); }
 }
 
+/* Kolory dla różnych kategorii */
+.category-technology {
+  background: rgba(33, 150, 243, 0.9); /* Niebieski */
+}
+
+.category-news {
+  background: rgba(76, 175, 80, 0.9); /* Zielony */
+}
+
+/* Usuwam niepotrzebne kategorie */
+
 @media (max-width: 768px) {
   .article-card {
     max-width: 100%;
