@@ -3,6 +3,7 @@ export interface ArticleSourceConfig {
   category: string;
   baseUrl: string;
   dateFormat?: string;
+  useCorsProxy?: boolean;
   selectors: {
     container: string;
     title: string;

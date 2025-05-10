@@ -33,7 +33,11 @@ export class ArticleFetcher {
 
   async fetchArticles(): Promise<Article[]> {
     try {
-      const response = await fetch(CORS_PROXY + encodeURIComponent(this.config.baseUrl));
+      const url = this.config.useCorsProxy ? 
+        CORS_PROXY + encodeURIComponent(this.config.baseUrl) : 
+        this.config.baseUrl;
+
+      const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       
       const html = await response.text();
