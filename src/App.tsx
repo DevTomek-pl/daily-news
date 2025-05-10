@@ -1,8 +1,9 @@
-import { useEffect, useState, useMemo, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { ArticleCard } from './components/ArticleCard/ArticleCard';
 import { CategoryFilter } from './components/CategoryFilter/CategoryFilter';
 import { ProgressBar } from './components/ProgressBar/ProgressBar';
 import { SourceToggle } from './components/SourceToggle/SourceToggle';
+import { BookmarksPage } from './pages/BookmarksPage';
 import type { Article } from './types/Article';
 import { ArticleFetcher } from './services/ArticleFetcher';
 import sourceConfigs from './config/sources.json';
@@ -14,22 +15,21 @@ import type { SourceLoadingStatus } from './components/LoadingProgressBars/Loadi
 const ARTICLES_PER_PAGE = 12;
 
 function App() {
+  const [currentPage, setCurrentPage] = useState<'home' | 'bookmarks'>(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('page') === 'bookmarks' ? 'bookmarks' : 'home';
+  });
   const [articles, setArticles] = useState<Article[]>([]);
   const [visibleArticles, setVisibleArticles] = useState<Article[]>([]);
-  const [page, setPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(() => {
-    // Initialize from URL params
     const params = new URLSearchParams(window.location.search);
     return params.get('category');
   });
   const [enabledSources, setEnabledSources] = useState<Set<string>>(() => {
-    // Initialize from URL params or default to all sources enabled
     const params = new URLSearchParams(window.location.search);
     const disabledSourcesParam = params.get('disabledSources');
     const disabledSources = disabledSourcesParam ? disabledSourcesParam.split(',') : [];
     const allSources = new Set(sourceConfigs.sources.map(source => source.name));
-    
-    // Remove disabled sources from the set
     disabledSources.forEach(source => allSources.delete(source));
     return allSources;
   });
@@ -39,14 +39,16 @@ function App() {
   const [hasMore, setHasMore] = useState(true);
   const [sourceStatus, setSourceStatus] = useState<SourceLoadingStatus[]>([]);
   const loadingRef = useRef<HTMLDivElement>(null);
-  const observer = useRef<IntersectionObserver | null>(null);
+
+  const categories = useMemo(() => {
+    const categorySet = new Set(articles.map(article => article.category));
+    return Array.from(categorySet).sort();
+  }, [articles]);
 
   useEffect(() => {
     const loadArticles = async () => {
       try {
         setIsLoading(true);
-        
-        // Initialize source status
         const initialSourceStatus: SourceLoadingStatus[] = sourceConfigs.sources.map(source => ({
           name: source.name,
           isLoading: true,
@@ -55,21 +57,16 @@ function App() {
         }));
         setSourceStatus(initialSourceStatus);
         
-        // Load articles from all sources in parallel
         const fetchPromises = sourceConfigs.sources.map(async (sourceConfig, index) => {
           try {
             const fetcher = new ArticleFetcher(sourceConfig);
             const sourceArticles = await fetcher.fetchArticles();
-            
-            // Update source status to complete
             setSourceStatus(prev => prev.map((status, idx) => 
               idx === index ? { ...status, isLoading: false, progress: 100 } : status
             ));
-            
             return sourceArticles;
           } catch (err) {
             console.error(`Error loading articles from ${sourceConfig.name}:`, err);
-            // Update source status to error
             setSourceStatus(prev => prev.map((status, idx) => 
               idx === index ? { 
                 ...status, 
@@ -78,14 +75,11 @@ function App() {
                 errorMessage: err instanceof Error ? err.message : 'Unknown error occurred'
               } : status
             ));
-            return []; // Return empty array in case of error
+            return [];
           }
         });
         
-        // Wait for all fetches to complete
         const articlesArrays = await Promise.all(fetchPromises);
-        
-        // Combine all articles
         const sortedArticles = articlesArrays
           .flat()
           .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -103,158 +97,119 @@ function App() {
     loadArticles();
   }, []);
 
-  const categories = useMemo(() => {
-    const uniqueCategories = new Set(articles.map(article => article.category));
-    return Array.from(uniqueCategories);
-  }, [articles]);
-
-  const filteredArticles = useMemo(() => {
-    return articles.filter(article => {
-      const matchesCategory = !selectedCategory || article.category === selectedCategory;
-      const isSourceEnabled = enabledSources.has(article.sourceName);
-      return matchesCategory && isSourceEnabled;
-    });
-  }, [articles, selectedCategory, enabledSources]);
-
-  const loadMoreArticles = useCallback(() => {
-    const nextPage = page + 1;
-    const start = (page - 1) * ARTICLES_PER_PAGE;
-    const end = nextPage * ARTICLES_PER_PAGE;
-    
-    const additionalArticles = filteredArticles.slice(start, end);
-    setVisibleArticles(prev => [...prev, ...additionalArticles]);
-    setPage(nextPage);
-    setHasMore(end < filteredArticles.length);
-  }, [page, filteredArticles]);
-
-  // Update URL when category changes
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    
-    // Update category parameter
-    if (selectedCategory) {
-      params.set('category', selectedCategory);
+    if (currentPage === 'bookmarks') {
+      params.set('page', 'bookmarks');
     } else {
-      params.delete('category');
+      params.delete('page');
     }
-    
-    // Preserve disabled sources parameter
-    const allSources = new Set(sourceConfigs.sources.map(source => source.name));
-    const disabledSources = Array.from(allSources)
-      .filter(source => !enabledSources.has(source));
-    
-    if (disabledSources.length > 0) {
-      params.set('disabledSources', disabledSources.join(','));
-    }
-    
-    const newUrl = `${window.location.pathname}${params.toString() ? `?${params}` : ''}`;
-    window.history.replaceState({}, '', newUrl);
-  }, [selectedCategory, enabledSources]);
+    window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+  }, [currentPage]);
 
-  // Update URL when sources change
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    
-    // Get all source names
-    const allSources = new Set(sourceConfigs.sources.map(source => source.name));
-    // Find disabled sources
-    const disabledSources = Array.from(allSources)
-      .filter(source => !enabledSources.has(source));
-    
-    if (disabledSources.length > 0) {
-      params.set('disabledSources', disabledSources.join(','));
-    } else {
-      params.delete('disabledSources');
-    }
-    
-    // Keep existing category parameter if present
-    const category = params.get('category');
-    if (category) {
-      params.set('category', category);
-    }
-    
-    const newUrl = `${window.location.pathname}${params.toString() ? `?${params}` : ''}`;
-    window.history.replaceState({}, '', newUrl);
-  }, [enabledSources]);
+  const handleCategoryChange = (category: string | null) => {
+    setSelectedCategory(category);
+    const filtered = filterArticles(articles, category, enabledSources);
+    setVisibleArticles(filtered.slice(0, ARTICLES_PER_PAGE));
+    setHasMore(filtered.length > ARTICLES_PER_PAGE);
+  };
 
-  useEffect(() => {
-    // Reset pagination when category changes
-    setPage(1);
-    setVisibleArticles(filteredArticles.slice(0, ARTICLES_PER_PAGE));
-    setHasMore(ARTICLES_PER_PAGE < filteredArticles.length);
-  }, [selectedCategory, filteredArticles]);
-
-  useEffect(() => {
-    const currentObserver = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !isLoading) {
-          loadMoreArticles();
-        }
-      },
-      { threshold: 0.5, rootMargin: '100px' }
-    );
-
-    if (loadingRef.current) {
-      currentObserver.observe(loadingRef.current);
-    }
-
-    observer.current = currentObserver;
-
-    return () => {
-      if (currentObserver && loadingRef.current) {
-        currentObserver.unobserve(loadingRef.current);
+  const handleSourceToggle = (sourceName: string) => {
+    setEnabledSources(prev => {
+      const newSources = new Set(prev);
+      if (newSources.has(sourceName)) {
+        newSources.delete(sourceName);
+      } else {
+        newSources.add(sourceName);
       }
-    };
-  }, [hasMore, isLoading, loadMoreArticles]);
+      return newSources;
+    });
+  };
+
+  const filterArticles = (
+    articles: Article[],
+    category: string | null,
+    enabledSources: Set<string>
+  ): Article[] => {
+    return articles.filter(article => {
+      const categoryMatch = !category || article.category === category;
+      const sourceMatch = enabledSources.has(article.sourceName);
+      return categoryMatch && sourceMatch;
+    });
+  };
+
+  const renderNavigation = () => (
+    <nav className="main-navigation">
+      <button 
+        className={`nav-button ${currentPage === 'home' ? 'active' : ''}`}
+        onClick={() => setCurrentPage('home')}
+      >
+        Home
+      </button>
+      <button 
+        className={`nav-button ${currentPage === 'bookmarks' ? 'active' : ''}`}
+        onClick={() => setCurrentPage('bookmarks')}
+      >
+        Bookmarks
+      </button>
+    </nav>
+  );
 
   return (
     <div className="app">
-      <ProgressBar isVisible={isLoading} />
-      <LoadingProgressBars sources={sourceStatus} />
-      <h1 
-        className="newspaper-header" 
-        onClick={() => {
-          window.location.href = "/daily-news/";
-        }}
-        style={{ cursor: 'pointer' }}
-      >
-        Daily News
-      </h1>
-      <CategoryFilter
-        categories={categories}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-        isLoading={isLoading}
-        onSourcesClick={() => setIsSourcePanelOpen(true)}
-      />
-      <SourceToggle
-        isOpen={isSourcePanelOpen}
-        onClose={() => setIsSourcePanelOpen(false)}
-        enabledSources={enabledSources}
-        onSourceToggle={(sourceName) => {
-          setEnabledSources(prev => {
-            const newSources = new Set(prev);
-            if (newSources.has(sourceName)) {
-              newSources.delete(sourceName);
-            } else {
-              newSources.add(sourceName);
-            }
-            return newSources;
-          });
-        }}
-      />
-      <div className="articles-grid">
-        {visibleArticles.map(article => (
-          <ArticleCard key={article.id} article={article} />
-        ))}
-      </div>
-      {hasMore && (
-        <div ref={loadingRef} className="loading-more">
-          Loading more articles...
-        </div>
+      {renderNavigation()}
+      {currentPage === 'home' ? (
+        <>
+          <div className="filters">
+            <CategoryFilter
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onCategoryChange={handleCategoryChange}
+              isLoading={isLoading}
+              onSourcesClick={() => setIsSourcePanelOpen(!isSourcePanelOpen)}
+            />
+          </div>
+
+          {isSourcePanelOpen && (
+            <SourceToggle
+              isOpen={isSourcePanelOpen}
+              onClose={() => setIsSourcePanelOpen(false)}
+              enabledSources={enabledSources}
+              onSourceToggle={handleSourceToggle}
+            />
+          )}
+
+          {isLoading && <LoadingProgressBars sources={sourceStatus} />}
+
+          {error && <div className="error-message">{error}</div>}
+
+          <div className="articles-grid">
+            {visibleArticles.map(article => (
+              <ArticleCard 
+                key={article.articleUrl} 
+                article={article}
+                onBookmarkChange={() => {
+                  // No need to refresh if we're on the home page
+                  if (currentPage === 'bookmarks') {
+                    const filtered = filterArticles(articles, selectedCategory, enabledSources);
+                    setVisibleArticles(filtered.slice(0, ARTICLES_PER_PAGE));
+                  }
+                }}
+              />
+            ))}
+          </div>
+
+          {!isLoading && hasMore && (
+            <div ref={loadingRef} className="loading-more">
+              <ProgressBar isVisible={true} />
+            </div>
+          )}
+
+          <ScrollToTopArrow />
+        </>
+      ) : (
+        <BookmarksPage />
       )}
-      {error && <div className="error">{error}</div>}
-      <ScrollToTopArrow />
     </div>
   );
 }

@@ -1,0 +1,40 @@
+import React, { useState, useEffect } from 'react';
+import type { Article } from '../types/Article';
+import { BookmarkService } from '../services/BookmarkService';
+import { ArticleCard } from '../components/ArticleCard/ArticleCard';
+
+export const BookmarksPage: React.FC = () => {
+    const [bookmarks, setBookmarks] = useState<Article[]>([]);
+
+    useEffect(() => {
+        loadBookmarks();
+    }, []);
+
+    const loadBookmarks = () => {
+        const savedBookmarks = BookmarkService.getBookmarks();
+        setBookmarks(savedBookmarks);
+    };
+
+    const handleBookmarkChange = () => {
+        loadBookmarks();
+    };
+
+    return (
+        <div className="bookmarks-page">
+            <h1>Bookmarked Articles</h1>
+            <div className="articles-grid">
+                {bookmarks.length === 0 ? (
+                    <p>No bookmarked articles yet.</p>
+                ) : (
+                    bookmarks.map((article) => (
+                        <ArticleCard
+                            key={article.articleUrl}
+                            article={article}
+                            onBookmarkChange={handleBookmarkChange}
+                        />
+                    ))
+                )}
+            </div>
+        </div>
+    );
+};

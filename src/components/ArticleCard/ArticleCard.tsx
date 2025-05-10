@@ -1,11 +1,13 @@
 import type { Article } from '../../types/Article';
+import { BookmarkButton } from '../BookmarkButton/BookmarkButton';
 import './ArticleCard.css';
 
 interface ArticleCardProps {
   article: Article;
+  onBookmarkChange?: () => void;
 }
 
-export const ArticleCard = ({ article }: ArticleCardProps) => {
+export const ArticleCard = ({ article, onBookmarkChange }: ArticleCardProps) => {
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleString('pl-PL', {
@@ -44,6 +46,7 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
       <div className="article-content">
         <div className="article-meta">
           <span className="article-date">{formatDate(article.date)}</span>
+          <BookmarkButton article={article} onBookmarkChange={onBookmarkChange} />
         </div>
         <h2 className="article-title clickable" onClick={handleArticleClick}>
           {article.title}

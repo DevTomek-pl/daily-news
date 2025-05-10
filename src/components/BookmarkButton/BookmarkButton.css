@@ -1,0 +1,24 @@
+.bookmark-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: inherit;
+    transition: color 0.2s ease;
+}
+
+.bookmark-button:hover {
+    color: #ffd700;
+}
+
+.bookmark-button.active {
+    color: #ffd700;
+}
+
+.bookmark-button svg {
+    width: 20px;
+    height: 20px;
+}
