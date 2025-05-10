@@ -214,7 +214,7 @@ function App() {
       <h1 
         className="newspaper-header" 
         onClick={() => {
-          window.location.href = "/";
+          window.location.href = "/daily-news/";
         }}
         style={{ cursor: 'pointer' }}
       >
