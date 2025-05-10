@@ -2,8 +2,6 @@ import type { Article } from '../types/Article';
 import type { ArticleSourceConfig } from '../types/ArticleSource';
 import { parseDate } from '../utils/dateUtils';
 
-const CORS_PROXY = 'https://corsproxy.io/?url=';
-
 export class ArticleFetcher {
   private readonly config: ArticleSourceConfig;
   private parsedTransformers: Record<string, ((value: string) => string) | undefined>;
@@ -33,9 +31,9 @@ export class ArticleFetcher {
 
   async fetchArticles(): Promise<Article[]> {
     try {
-      const url = this.config.useCorsProxy ? 
-        CORS_PROXY + encodeURIComponent(this.config.baseUrl) : 
-        this.config.baseUrl;
+      const url = this.config.corsProxy 
+        ? `${this.config.corsProxy}${encodeURIComponent(this.config.baseUrl)}`
+        : this.config.baseUrl;
 
       const response = await fetch(url);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);

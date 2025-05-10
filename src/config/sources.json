@@ -5,7 +5,7 @@
       "category": "Technology",
       "baseUrl": "https://www.xda-developers.com",
       "dateFormat": "YYYY-MM-DDTHH:mm:ssZ",
-      "useCorsProxy": true,
+      "corsProxy": "https://corsproxy.io/?url=",
       "selectors": {
         "container": "body > main > section.wrapper.w-section-latest > div > div > div.sentinel-home-list",
         "title": "div > h5 > a",
@@ -24,7 +24,7 @@
       "category": "News",
       "baseUrl": "https://www.laskonline.pl",
       "dateFormat": "HH:mm, DD.MM.YYYY 'r.'",
-      "useCorsProxy": true,
+      "corsProxy": "https://api.allorigins.win/raw?url=",
       "selectors": {
         "container": "#lewa_kolumna",
         "title": "div > h2 > a",
@@ -43,7 +43,7 @@
       "category": "Technology",
       "baseUrl": "https://blog.allegro.tech",
       "dateFormat": "MMM D",
-      "useCorsProxy": false,
+      "corsProxy": null,
       "selectors": {
         "container": "body > main > div > div > section > div.mx-auto.max-w-screen-xl",
         "title": "article h2 > a",
