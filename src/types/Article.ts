@@ -6,6 +6,5 @@ export interface Article {
   imageUrl: string;
   articleUrl: string;
   sourceName: string;
-  category: string; // Dodane nowe pole
+  category: string;
 }
-

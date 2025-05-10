@@ -73,17 +73,11 @@
   font-size: 1rem;
 }
 
-/* Usuwam style dla article-link */
-/* .article-link {
-  ...
-} */
-
 .article-source {
   position: absolute;
   top: 16px;
   left: 16px;
   z-index: 2;
-  background: rgba(33, 150, 243, 0.9);
   color: white;
   padding: 8px 16px;
   border-radius: 99px;
@@ -117,7 +111,7 @@
   position: relative;
   display: inline-block;
   transition: all 0.3s ease;
-  padding-right: 32px; /* Dodaję padding dla miejsca na strzałkę */
+  padding-right: 32px;
 }
 
 .article-title.clickable:hover {
@@ -183,16 +177,13 @@
   50% { transform: translateX(6px); }
 }
 
-/* Kolory dla różnych kategorii */
 .category-technology {
-  background: rgba(33, 150, 243, 0.9); /* Niebieski */
+  background: rgba(33, 150, 243, 0.9);
 }
 
 .category-news {
-  background: rgba(76, 175, 80, 0.9); /* Zielony */
+  background: rgba(76, 175, 80, 0.9);
 }
-
-/* Usuwam niepotrzebne kategorie */
 
 @media (max-width: 768px) {
   .article-card {
