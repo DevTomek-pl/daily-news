@@ -39,6 +39,41 @@ function App() {
   const [hasMore, setHasMore] = useState(true);
   const [sourceStatus, setSourceStatus] = useState<SourceLoadingStatus[]>([]);
   const loadingRef = useRef<HTMLDivElement>(null);
+  const observer = useRef<IntersectionObserver | null>(null);
+
+  // Setup intersection observer for infinite scrolling
+  useEffect(() => {
+    if (!isLoading && hasMore) {
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            const currentArticles = filterArticles(articles, selectedCategory, enabledSources);
+            const nextArticles = currentArticles.slice(
+              visibleArticles.length,
+              visibleArticles.length + ARTICLES_PER_PAGE
+            );
+            
+            if (nextArticles.length > 0) {
+              setVisibleArticles(prev => [...prev, ...nextArticles]);
+            }
+            
+            setHasMore(visibleArticles.length + nextArticles.length < currentArticles.length);
+          }
+        },
+        { threshold: 0.1 }
+      );
+
+      if (loadingRef.current) {
+        observer.current.observe(loadingRef.current);
+      }
+    }
+
+    return () => {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+    };
+  }, [isLoading, hasMore, articles, selectedCategory, enabledSources, visibleArticles]);
 
   const categories = useMemo(() => {
     const categorySet = new Set(articles.map(article => article.category));
@@ -112,6 +147,11 @@ function App() {
     const filtered = filterArticles(articles, category, enabledSources);
     setVisibleArticles(filtered.slice(0, ARTICLES_PER_PAGE));
     setHasMore(filtered.length > ARTICLES_PER_PAGE);
+
+    // Reset intersection observer
+    if (observer.current) {
+      observer.current.disconnect();
+    }
   };
 
   const handleSourceToggle = (sourceName: string) => {
@@ -124,6 +164,16 @@ function App() {
       }
       return newSources;
     });
+
+    // Reset articles and pagination when sources change
+    const filtered = filterArticles(articles, selectedCategory, enabledSources);
+    setVisibleArticles(filtered.slice(0, ARTICLES_PER_PAGE));
+    setHasMore(filtered.length > ARTICLES_PER_PAGE);
+
+    // Reset intersection observer
+    if (observer.current) {
+      observer.current.disconnect();
+    }
   };
 
   const filterArticles = (
