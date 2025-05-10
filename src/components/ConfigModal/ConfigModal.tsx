@@ -1,0 +1,50 @@
+import { useEffect, useRef } from 'react';
+import './ConfigModal.css';
+import sourceConfigs from '../../config/sources.json';
+
+interface ConfigModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const ConfigModal = ({ isOpen, onClose }: ConfigModalProps) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="config-modal" ref={modalRef}>
+        <div className="modal-header">
+          <h2>Sources Configuration</h2>
+          <button className="close-button" onClick={onClose}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+        <div className="modal-content">
+          <pre>{JSON.stringify(sourceConfigs, null, 2)}</pre>
+        </div>
+      </div>
+    </div>
+  );
+};
