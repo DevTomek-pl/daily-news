@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo, useRef, useCallback } from 'react';
 import { ArticleCard } from './components/ArticleCard/ArticleCard';
 import { CategoryFilter } from './components/CategoryFilter/CategoryFilter';
+import { ProgressBar } from './components/ProgressBar/ProgressBar';
 import type { Article } from './types/Article';
 import { ArticleFetcher } from './services/ArticleFetcher';
 import sourceConfigs from './config/sources.json';
@@ -103,6 +104,7 @@ function App() {
 
   return (
     <div className="app">
+      <ProgressBar isVisible={isLoading} />
       <h1 className="newspaper-header">Daily News</h1>
       <CategoryFilter
         categories={categories}
