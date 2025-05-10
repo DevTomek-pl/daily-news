@@ -29,6 +29,7 @@ body {
   text-align: center;
   margin: 2rem 0;
   background: linear-gradient(135deg, #2196f3, #21cbf3);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: headerEntrance 1s ease-out;
@@ -59,6 +60,16 @@ body {
   padding: 2rem;
   font-size: 1.2rem;
   color: #2196f3;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.loading-more {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1rem;
+  color: #2196f3;
+  width: 100%;
+  opacity: 0.8;
   animation: pulse 1.5s ease-in-out infinite;
 }
 
