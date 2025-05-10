@@ -144,12 +144,18 @@ function App() {
         className={`nav-button ${currentPage === 'home' ? 'active' : ''}`}
         onClick={() => setCurrentPage('home')}
       >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 3L4 9v12h16V9l-8-6zm6 16h-3v-6H9v6H6v-9l6-4.5 6 4.5v9z"/>
+        </svg>
         Home
       </button>
       <button 
         className={`nav-button ${currentPage === 'bookmarks' ? 'active' : ''}`}
         onClick={() => setCurrentPage('bookmarks')}
       >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+        </svg>
         Bookmarks
       </button>
     </nav>
