@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { ArticleCard } from './components/ArticleCard/ArticleCard';
+import { CategoryFilter } from './components/CategoryFilter/CategoryFilter';
 import type { Article } from './types/Article';
 import { ArticleFetcher } from './services/ArticleFetcher';
 import sourceConfigs from './config/sources.json';
@@ -8,6 +9,7 @@ import { ScrollToTopArrow } from './components/ScrollToTopArrow';
 
 function App() {
   const [articles, setArticles] = useState<Article[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -40,13 +42,29 @@ function App() {
     loadArticles();
   }, []);
 
+  const categories = useMemo(() => {
+    const uniqueCategories = new Set(articles.map(article => article.category));
+    return Array.from(uniqueCategories);
+  }, [articles]);
+
+  const filteredArticles = useMemo(() => {
+    if (!selectedCategory) return articles;
+    return articles.filter(article => article.category === selectedCategory);
+  }, [articles, selectedCategory]);
+
   return (
     <div className="app">
       <h1 className="newspaper-header">Daily News</h1>
       {isLoading && <div className="loading">Loading articles...</div>}
       {error && <div className="error">{error}</div>}
+      <CategoryFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        isLoading={isLoading}
+      />
       <div className="articles-grid">
-        {articles.map(article => (
+        {filteredArticles.map(article => (
           <ArticleCard key={article.id} article={article} />
         ))}
       </div>
