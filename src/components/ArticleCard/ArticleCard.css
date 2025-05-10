@@ -68,30 +68,15 @@
 
 .article-description {
   color: #444;
-  margin-bottom: 1.8rem;
+  margin-bottom: 0;
   line-height: 1.6;
   font-size: 1rem;
 }
 
-.article-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0.8rem 1.5rem;
-  background: linear-gradient(135deg, #2196f3, #21cbf3);
-  color: white;
-  text-decoration: none;
-  border-radius: 99px;
-  font-weight: 600;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.article-link:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
-}
+/* Usuwam style dla article-link */
+/* .article-link {
+  ...
+} */
 
 .article-source {
   position: absolute;

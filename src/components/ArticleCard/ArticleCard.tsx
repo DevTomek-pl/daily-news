@@ -43,11 +43,7 @@ export const ArticleCard = ({ article }: ArticleCardProps) => {
           {article.title}
         </h2>
         <p className="article-description">{article.description}</p>
-        <a href={article.articleUrl} className="article-link" target="_blank" rel="noopener noreferrer">
-          Read more
-        </a>
       </div>
     </div>
   );
 };
-
