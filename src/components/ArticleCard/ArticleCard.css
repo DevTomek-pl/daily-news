@@ -110,28 +110,11 @@
 .article-title.clickable {
   position: relative;
   display: inline-block;
-  transition: all 0.3s ease;
-  padding-right: 32px;
+  transition: color 0.3s ease;
 }
 
 .article-title.clickable:hover {
   color: #2196f3;
-  transform: translateX(8px);
-}
-
-.article-title.clickable::after {
-  content: '→';
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  opacity: 0;
-  transition: all 0.3s ease;
-}
-
-.article-title.clickable:hover::after {
-  opacity: 1;
-  right: -8px;
 }
 
 .image-overlay {
@@ -205,10 +188,6 @@
 
 @media (hover: none) {
   .image-overlay {
-    display: none;
-  }
-  
-  .article-title.clickable::after {
     display: none;
   }
 }
