@@ -35,6 +35,24 @@
         "articleUrl": "url.startsWith('http') ? url : `https://www.laskonline.pl/${url}`",
         "imageUrl": "url.startsWith('http') ? url : `https://www.laskonline.pl${url}`"
       }
+    },
+    {
+      "name": "Allegro Tech",
+      "category": "Technology",
+      "baseUrl": "/api/allegro-tech",
+      "dateFormat": "MMM D",
+      "selectors": {
+        "container": "body > main > div > div > section > div.mx-auto.max-w-screen-xl",
+        "title": "article h2 > a",
+        "description": "article p",
+        "date": "article div.flex.flex-col-reverse.sm\\:flex-row.justify-start.sm\\:justify-between.items-start.sm\\:items-center.mb-2.text-gray-500 > span > strong",
+        "link": "article h2 > a",
+        "image": "null"
+      },
+      "transformers": {
+        "articleUrl": "url.startsWith('http') ? url : `https://blog.allegro.tech${url}`",
+        "imageUrl": "'https://blog.allegro.tech/assets/img/allegro-tech.svg'"
+      }
     }
   ]
 }
