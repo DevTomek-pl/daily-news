@@ -35,12 +35,11 @@ export const BookmarkButton: React.FC<BookmarkButtonProps> = ({ article, onBookm
         >
             {isBookmarked ? (
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3 3v18h18V3H3zm15 15H6V6h12v12z"/>
-                    <path d="M8 8h8v8H8z"/>
+                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
                 </svg>
             ) : (
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3 3v18h18V3H3zm15 15H6V6h12v12zm-2-2H8V8h8v8z"/>
+                    <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z"/>
                 </svg>
             )}
         </button>
