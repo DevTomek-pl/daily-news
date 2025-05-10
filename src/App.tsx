@@ -8,7 +8,7 @@ import type { Article } from './types/Article';
 import { ArticleFetcher } from './services/ArticleFetcher';
 import sourceConfigs from './config/sources.json';
 import './App.css';
-import { ScrollToTopArrow } from './components/ScrollToTopArrow';
+import { ScrollToTopArrow } from './components/ScrollToTopArrow/ScrollToTopArrow';
 import { LoadingProgressBars } from './components/LoadingProgressBars/LoadingProgressBars';
 import type { SourceLoadingStatus } from './components/LoadingProgressBars/LoadingProgressBars';
 

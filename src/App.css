@@ -100,40 +100,7 @@ body {
   75% { transform: translateX(10px); }
 }
 
-.scroll-top-arrow {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 100;
-  cursor: pointer;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-  background: none;
-  border: none;
-  padding: 0;
-  transform: translateY(20px);
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
-  outline: none;  /* Dodane */
-}
 
-.scroll-top-arrow:focus {
-  outline: none;  /* Dodane */
-}
-
-.scroll-top-arrow.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.scroll-top-arrow svg {
-  transition: transform 0.3s ease;
-}
-
-.scroll-top-arrow:hover svg {
-  transform: translateY(-4px);
-}
 
 .main-navigation {
   display: flex;
