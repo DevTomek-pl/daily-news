@@ -41,12 +41,40 @@ export const parseDateWithFormat = (dateString: string, format: string, sourceNa
   if (format.includes("'r.'")) {
     return parsePolishDate(dateString, format, sourceName);
   }
-  
-  // Standard format parsing
-  const parsedDate = dayjs(dateString, format);
-  
-  if (parsedDate.isValid()) {
-    return parsedDate.toISOString();
+
+  try {
+    // Parse the date according to the format
+    let parsedDate = dayjs(dateString, format, true);
+
+    // Handle case where the date string might have additional text
+    if (!parsedDate.isValid()) {
+      // Try parsing without strict mode
+      parsedDate = dayjs(dateString, format, false);
+    }
+    
+    // If the format doesn't include year, add the current year
+    if (!format.includes('YYYY') && !format.includes('YY')) {
+      const currentYear = dayjs().year();
+      const withYear = parsedDate.year(currentYear);
+      
+      // If the resulting date is in the future, use previous year
+      if (withYear.isAfter(dayjs())) {
+        parsedDate = withYear.year(currentYear - 1);
+      } else {
+        parsedDate = withYear;
+      }
+    }
+    
+    // If the format doesn't include time, set it to the end of the day
+    if (!format.includes('HH') && !format.includes('hh')) {
+      parsedDate = parsedDate.hour(23).minute(59).second(59);
+    }
+    
+    if (parsedDate.isValid()) {
+      return parsedDate.toISOString();
+    }
+  } catch (error) {
+    console.warn(`Error parsing date for ${sourceName}:`, error);
   }
   
   console.warn(`Invalid date for ${sourceName}: "${dateString}" with format "${format}"`);
