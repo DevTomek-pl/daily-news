@@ -24,25 +24,25 @@ export const CategoryFilter = ({
     }
   }, [isLoading]);
 
-  if (!isVisible) return null;
-
   return (
-    <div className="category-filter">
-      <button
-        className={`category-button ${selectedCategory === null ? 'active' : ''}`}
-        onClick={() => onCategoryChange(null)}
-      >
-        All
-      </button>
-      {categories.map((category) => (
+    <div className={`category-filter ${isVisible ? 'visible' : ''}`}>
+      <div className="filter-content">
         <button
-          key={category}
-          className={`category-button ${selectedCategory === category ? 'active' : ''}`}
-          onClick={() => onCategoryChange(category)}
+          className={`category-button ${selectedCategory === null ? 'active' : ''}`}
+          onClick={() => onCategoryChange(null)}
         >
-          {category}
+          All
         </button>
-      ))}
+        {categories.map((category) => (
+          <button
+            key={category}
+            className={`category-button ${selectedCategory === category ? 'active' : ''}`}
+            onClick={() => onCategoryChange(category)}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
