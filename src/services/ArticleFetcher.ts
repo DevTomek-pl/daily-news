@@ -2,6 +2,8 @@ import type { Article } from '../types/Article';
 import type { ArticleSourceConfig } from '../types/ArticleSource';
 import { parseDate } from '../utils/dateUtils';
 
+const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+
 export class ArticleFetcher {
   private readonly config: ArticleSourceConfig;
   private parsedTransformers: Record<string, ((value: string) => string) | undefined>;
@@ -31,7 +33,7 @@ export class ArticleFetcher {
 
   async fetchArticles(): Promise<Article[]> {
     try {
-      const response = await fetch(this.config.baseUrl);
+      const response = await fetch(CORS_PROXY + encodeURIComponent(this.config.baseUrl));
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       
       const html = await response.text();
