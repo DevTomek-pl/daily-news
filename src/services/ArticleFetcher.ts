@@ -2,7 +2,7 @@ import type { Article } from '../types/Article';
 import type { ArticleSourceConfig } from '../types/ArticleSource';
 import { parseDate } from '../utils/dateUtils';
 
-const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+const CORS_PROXY = 'https://corsproxy.io/?url=';
 
 export class ArticleFetcher {
   private readonly config: ArticleSourceConfig;
