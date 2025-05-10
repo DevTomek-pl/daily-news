@@ -45,7 +45,6 @@ function App() {
     const loadArticles = async () => {
       try {
         setIsLoading(true);
-        const allArticles: Article[] = [];
         
         // Initialize source status
         const initialSourceStatus: SourceLoadingStatus[] = sourceConfigs.sources.map(source => ({
@@ -56,41 +55,40 @@ function App() {
         }));
         setSourceStatus(initialSourceStatus);
         
-        // Load articles from each source
-        for (let i = 0; i < sourceConfigs.sources.length; i++) {
-          const sourceConfig = sourceConfigs.sources[i];
+        // Load articles from all sources in parallel
+        const fetchPromises = sourceConfigs.sources.map(async (sourceConfig, index) => {
           try {
             const fetcher = new ArticleFetcher(sourceConfig);
             const sourceArticles = await fetcher.fetchArticles();
-            allArticles.push(...sourceArticles);
             
             // Update source status to complete
             setSourceStatus(prev => prev.map((status, idx) => 
-              idx === i ? { ...status, isLoading: false, progress: 100 } : status
+              idx === index ? { ...status, isLoading: false, progress: 100 } : status
             ));
+            
+            return sourceArticles;
           } catch (err) {
             console.error(`Error loading articles from ${sourceConfig.name}:`, err);
-            // Update source status to error with message
+            // Update source status to error
             setSourceStatus(prev => prev.map((status, idx) => 
-              idx === i ? { 
+              idx === index ? { 
                 ...status, 
                 isLoading: false, 
                 hasError: true,
                 errorMessage: err instanceof Error ? err.message : 'Unknown error occurred'
               } : status
             ));
+            return []; // Return empty array in case of error
           }
-          
-          // Update progress for the current source
-          setSourceStatus(prev => prev.map((status, idx) => 
-            idx === i ? { ...status, progress: 100 } : 
-            idx === i + 1 ? { ...status, progress: 0 } : status
-          ));
-        }
-
-        const sortedArticles = allArticles.sort((a, b) => 
-          new Date(b.date).getTime() - new Date(a.date).getTime()
-        );
+        });
+        
+        // Wait for all fetches to complete
+        const articlesArrays = await Promise.all(fetchPromises);
+        
+        // Combine all articles
+        const sortedArticles = articlesArrays
+          .flat()
+          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         
         setArticles(sortedArticles);
         setVisibleArticles(sortedArticles.slice(0, ARTICLES_PER_PAGE));
