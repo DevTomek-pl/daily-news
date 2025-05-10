@@ -19,6 +19,7 @@
   opacity: 0;
   transform: translateY(-20px);
   transition: all 0.3s ease-out;
+  padding: 4px;  /* Dodajemy padding aby przyciski nie "wyjeżdżały" poza kontener */
 }
 
 .category-filter.visible .filter-content {
@@ -43,6 +44,8 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   border-color: #2196f3;
+  position: relative;  /* Dodajemy position relative dla lepszej kontroli nad efektem hover */
+  z-index: 1;  /* Zapewniamy, że przycisk będzie zawsze nad innymi elementami podczas hoveru */
 }
 
 .category-button.active {
