@@ -175,7 +175,15 @@ function App() {
   return (
     <div className="app">
       <ProgressBar isVisible={isLoading} />
-      <h1 className="newspaper-header">Daily News</h1>
+      <h1 
+        className="newspaper-header" 
+        onClick={() => {
+          window.location.href = "/";
+        }}
+        style={{ cursor: 'pointer' }}
+      >
+        Daily News
+      </h1>
       <CategoryFilter
         categories={categories}
         selectedCategory={selectedCategory}
