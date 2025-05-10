@@ -19,13 +19,13 @@ export class BookmarkService {
     static removeBookmark(article: Article): void {
         const bookmarks = this.getBookmarks();
         const updatedBookmarks = bookmarks.filter(
-            (bookmark) => bookmark.url !== article.url
+            (bookmark) => bookmark.articleUrl !== article.articleUrl
         );
         localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(updatedBookmarks));
     }
 
     static isBookmarked(article: Article): boolean {
         const bookmarks = this.getBookmarks();
-        return bookmarks.some((bookmark) => bookmark.url === article.url);
+        return bookmarks.some((bookmark) => bookmark.articleUrl === article.articleUrl);
     }
 }
