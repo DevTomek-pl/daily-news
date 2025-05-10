@@ -14,7 +14,11 @@ function App() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [visibleArticles, setVisibleArticles] = useState<Article[]>([]);
   const [page, setPage] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(() => {
+    // Initialize from URL params
+    const params = new URLSearchParams(window.location.search);
+    return params.get('category');
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
@@ -71,6 +75,20 @@ function App() {
     setPage(nextPage);
     setHasMore(end < filteredArticles.length);
   }, [page, filteredArticles]);
+
+  // Update URL when category changes
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    
+    if (selectedCategory) {
+      params.set('category', selectedCategory);
+    } else {
+      params.delete('category');
+    }
+    
+    const newUrl = `${window.location.pathname}${params.toString() ? `?${params}` : ''}`;
+    window.history.replaceState({}, '', newUrl);
+  }, [selectedCategory]);
 
   useEffect(() => {
     // Reset pagination when category changes
