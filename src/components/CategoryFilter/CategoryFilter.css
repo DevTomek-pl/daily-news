@@ -74,12 +74,18 @@
   justify-content: center;
   transition: all 0.3s ease;
   color: #666;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .config-button:hover {
   background: rgba(0, 0, 0, 0.05);
   color: #2196f3;
   transform: rotate(45deg);
+}
+
+.config-button:focus-visible {
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.4);
 }
 
 .source-button {
@@ -95,12 +101,18 @@
   justify-content: center;
   transition: all 0.3s ease;
   color: #666;
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
   margin-left: 0.5rem;
 }
 
 .source-button:hover {
   background: rgba(0, 0, 0, 0.05);
   color: #2196f3;
+}
+
+.source-button:focus-visible {
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.4);
 }
 
 @media (max-width: 768px) {
