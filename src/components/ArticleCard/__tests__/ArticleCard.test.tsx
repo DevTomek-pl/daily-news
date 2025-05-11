@@ -1,0 +1,63 @@
+import { render, screen, fireEvent } from '@testing-library/react';
+import { vi } from 'vitest';
+import '@testing-library/jest-dom';
+import { ArticleCard } from '../ArticleCard';
+
+describe('ArticleCard', () => {
+  const mockArticle = {
+    id: '1',
+    title: 'Test Article',
+    description: 'This is a test description',
+    url: 'https://example.com',
+    source: 'Test Source',
+    date: '2025-05-11T10:00:00Z',
+    imageUrl: 'https://example.com/image.jpg',
+    articleUrl: 'https://example.com/article',
+    sourceName: 'Example Source',
+    category: 'Technology'
+  };
+
+  beforeEach(() => {
+    // Mock window.open since we'll be testing it
+    vi.stubGlobal('open', vi.fn());
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('renders the article title and description', () => {
+    render(<ArticleCard article={mockArticle} />);
+
+    expect(screen.getByText('Test Article')).toBeInTheDocument();
+    expect(screen.getByText('This is a test description')).toBeInTheDocument();
+  });
+
+  it('opens article in new tab when clicking title', () => {
+    render(<ArticleCard article={mockArticle} />);
+
+    const title = screen.getByText('Test Article');
+    expect(title).toHaveClass('clickable');
+    
+    fireEvent.click(title);
+    expect(window.open).toHaveBeenCalledWith(
+      'https://example.com/article',
+      '_blank',
+      'noopener,noreferrer'
+    );
+  });
+
+  it('opens article in new tab when clicking image wrapper', () => {
+    render(<ArticleCard article={mockArticle} />);
+
+    const imageWrapper = screen.getByRole('img').parentElement;
+    expect(imageWrapper).toHaveClass('clickable');
+    
+    fireEvent.click(imageWrapper!);
+    expect(window.open).toHaveBeenCalledWith(
+      'https://example.com/article',
+      '_blank',
+      'noopener,noreferrer'
+    );
+  });
+});
