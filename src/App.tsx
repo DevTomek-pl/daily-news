@@ -120,7 +120,12 @@ function App() {
           .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
         
         setArticles(sortedArticles);
-        setVisibleArticles(sortedArticles.slice(0, ARTICLES_PER_PAGE));
+        
+        // Filtruj artykuły zgodnie z parametrami URL
+        const filteredArticles = filterArticles(sortedArticles, selectedCategory, enabledSources);
+        setVisibleArticles(filteredArticles.slice(0, ARTICLES_PER_PAGE));
+        setHasMore(filteredArticles.length > ARTICLES_PER_PAGE);
+
       } catch (err) {
         setError('Failed to load articles');
         console.error(err);
@@ -141,6 +146,60 @@ function App() {
     }
     window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
   }, [currentPage]);
+
+  // Update URL when category or enabled sources change
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    
+    if (currentPage === 'bookmarks') {
+      params.set('page', 'bookmarks');
+    } else {
+      params.delete('page');
+    }
+
+    if (selectedCategory) {
+      params.set('category', selectedCategory);
+    } else {
+      params.delete('category');
+    }
+
+    const allSources = sourceConfigs.sources.map(source => source.name);
+    const disabledSources = allSources.filter(source => !enabledSources.has(source));
+    if (disabledSources.length > 0) {
+      params.set('disabledSources', disabledSources.join(','));
+    } else {
+      params.delete('disabledSources');
+    }
+
+    window.history.pushState({}, '', `${window.location.pathname}?${params.toString()}`);
+  }, [currentPage, selectedCategory, enabledSources]);
+
+  // Handle navigation changes
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const categoryParam = params.get('category');
+      const pageParam = params.get('page');
+      const disabledSourcesParam = params.get('disabledSources');
+
+      setCurrentPage(pageParam === 'bookmarks' ? 'bookmarks' : 'home');
+      setSelectedCategory(categoryParam);
+
+      const allSources = new Set(sourceConfigs.sources.map(source => source.name));
+      if (disabledSourcesParam) {
+        disabledSourcesParam.split(',').forEach(source => allSources.delete(source));
+      }
+      setEnabledSources(allSources);
+
+      // Aktualizuj widoczne artykuły zgodnie z nowymi filtrami
+      const filtered = filterArticles(articles, categoryParam, allSources);
+      setVisibleArticles(filtered.slice(0, ARTICLES_PER_PAGE));
+      setHasMore(filtered.length > ARTICLES_PER_PAGE);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const handleCategoryChange = (category: string | null) => {
     setSelectedCategory(category);
