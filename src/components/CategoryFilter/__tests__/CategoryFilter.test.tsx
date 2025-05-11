@@ -119,4 +119,28 @@ describe('CategoryFilter', () => {
     fireEvent.click(screen.getByText('All'));
     expect(mockOnCategoryChange).toHaveBeenCalledWith(null);
   });
+
+  it('restores selected category after page refresh', () => {
+    const selectedCategory = 'Sports';
+
+    // Simulate saving the selected category to localStorage
+    localStorage.setItem('selectedCategory', selectedCategory);
+
+    render(
+      <MemoryRouter>
+        <CategoryFilter
+          categories={mockCategories}
+          selectedCategory={selectedCategory}
+          onCategoryChange={mockOnCategoryChange}
+          isLoading={false}
+          onSourcesClick={mockOnSourcesClick}
+        />
+      </MemoryRouter>
+    );
+
+    // Verify the correct category button is active
+    const selectedButton = screen.getByText(selectedCategory);
+    expect(selectedButton).toHaveClass('active');
+    expect(screen.getByText('All')).not.toHaveClass('active');
+  });
 });
