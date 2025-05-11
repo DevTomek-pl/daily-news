@@ -1,5 +1,17 @@
 # Daily News
 
+## Project Development Approach
+
+This project represents a modern approach to software development, combining:
+
+- **AI-Driven Development**: Leveraging Claude 3.5 Sonnet's capabilities for code generation and optimization
+- **Vibe Coding Paradigm**: Emphasizing intuitive, maintainable, and efficient code structure
+- **Human-AI Collaboration**: Merging human creativity with AI assistance for optimal results
+
+The entire codebase was developed through an iterative process of human-AI collaboration, ensuring high code quality while maintaining modern development practices and patterns.
+
+## Overview
+
 A modern news aggregator application built with React 19, TypeScript, and Vite that fetches and displays articles from various sources in real-time.
 
 ## Features
