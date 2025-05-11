@@ -9,7 +9,7 @@
 }
 
 .category-filter.visible {
-  height: 70px; /* Stała wysokość dla kontenera filtrów */
+  height: 70px; /* Constant height for filters container */
   opacity: 1;
   margin: 2rem 0;
 }
@@ -21,7 +21,7 @@
   opacity: 0;
   transform: translateY(-20px);
   transition: all 0.3s ease-out;
-  padding: 4px;  /* Dodajemy padding aby przyciski nie "wyjeżdżały" poza kontener */
+  padding: 4px;  /* Add padding so buttons don't overflow the container */
 }
 
 .category-filter.visible .filter-content {
@@ -46,8 +46,8 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   border-color: #2196f3;
-  position: relative;  /* Dodajemy position relative dla lepszej kontroli nad efektem hover */
-  z-index: 1;  /* Zapewniamy, że przycisk będzie zawsze nad innymi elementami podczas hoveru */
+  position: relative;  /* Add position relative for better hover effect control */
+  z-index: 1;  /* Ensure the button is always above other elements during hover */
 }
 
 .category-button.active {
@@ -117,7 +117,7 @@
 
 @media (max-width: 768px) {
   .category-filter.visible {
-    height: 100px; /* Większa wysokość dla układu z zawijaniem */
+    height: 100px; /* Larger height for wrap layout */
   }
 
   .filter-content {
@@ -134,6 +134,6 @@
 
 @media (max-width: 480px) {
   .category-filter.visible {
-    height: 130px; /* Jeszcze większa wysokość dla bardzo małych ekranów */
+    height: 130px; /* Even larger height for very small screens */
   }
 }

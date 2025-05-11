@@ -25,13 +25,13 @@ export const LoadingProgressBars: React.FC<LoadingProgressBarsProps> = ({ source
   
   useEffect(() => {
     if (!isAnySourceLoading) {
-      // Ustaw różne czasy ukrywania w zależności od tego czy są błędy
-      const hideDelay = hasErrors ? 5000 : 2000; // 5 sekund dla błędów, 2 sekundy dla sukcesu
+      // Set different hide delays depending on whether there are errors
+      const hideDelay = hasErrors ? 5000 : 2000; // 5 seconds for errors, 2 seconds for success
       
-      // Rozpocznij animację znikania
+      // Start fade-out animation
       setIsHiding(true);
       
-      // Ukryj komponent po animacji
+      // Hide component after animation
       const timer = setTimeout(() => {
         setIsVisible(false);
       }, hideDelay);
@@ -43,7 +43,7 @@ export const LoadingProgressBars: React.FC<LoadingProgressBarsProps> = ({ source
     }
   }, [isAnySourceLoading, hasErrors]);
 
-  // Pokaż ponownie, jeśli zaczyna się nowe ładowanie
+  // Show again when new loading starts
   useEffect(() => {
     if (isAnySourceLoading) {
       setIsVisible(true);
