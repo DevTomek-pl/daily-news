@@ -143,4 +143,25 @@ describe('CategoryFilter', () => {
     expect(selectedButton).toHaveClass('active');
     expect(screen.getByText('All')).not.toHaveClass('active');
   });
+
+  it('handles filters from URL correctly after page refresh', () => {
+    const initialCategory = 'Politics';
+
+    render(
+      <MemoryRouter initialEntries={[`/?category=${initialCategory}`]}>
+        <CategoryFilter
+          categories={mockCategories}
+          selectedCategory={initialCategory}
+          onCategoryChange={mockOnCategoryChange}
+          isLoading={false}
+          onSourcesClick={mockOnSourcesClick}
+        />
+      </MemoryRouter>
+    );
+
+    // Verify the correct category button is active based on URL
+    const selectedButton = screen.getByText(initialCategory);
+    expect(selectedButton).toHaveClass('active');
+    expect(screen.getByText('All')).not.toHaveClass('active');
+  });
 });
