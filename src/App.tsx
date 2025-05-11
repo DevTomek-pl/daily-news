@@ -6,6 +6,7 @@ import { CategoryFilter } from './components/CategoryFilter/CategoryFilter';
 import { ProgressBar } from './components/ProgressBar/ProgressBar';
 import { SourceToggle } from './components/SourceToggle/SourceToggle';
 import { BookmarksPage } from './pages/BookmarksPage';
+import { ArticleCounter } from './components/ArticleCounter/ArticleCounter';
 import type { Article } from './types/Article';
 import { ArticleFetcher } from './services/ArticleFetcher';
 import sourceConfigs from './config/sources.json';
@@ -276,6 +277,7 @@ function App() {
   return (
     <div className="app">
       {renderNavigation()}
+      
       {currentPage === 'home' ? (
         <>
           <div className="filters">
@@ -287,6 +289,13 @@ function App() {
               onSourcesClick={() => setIsSourcePanelOpen(!isSourcePanelOpen)}
             />
           </div>
+
+          {currentPage === 'home' && !isLoading && (
+            <ArticleCounter 
+              visibleCount={visibleArticles.length} 
+              totalCount={filterArticles(articles, selectedCategory, enabledSources).length} 
+            />
+          )}
 
           {isSourcePanelOpen && (
             <SourceToggle

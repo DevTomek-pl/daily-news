@@ -1,0 +1,14 @@
+.article-counter {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: var(--background-color);
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
