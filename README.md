@@ -31,11 +31,15 @@ A modern news aggregator application built with React 19, TypeScript, and Vite t
 - Node.js (version 18 or higher)
 - npm (version 9 or higher) or yarn
 
+## Live Demo
+
+You can view the project live at [Daily News](https://devtomek-pl.github.io/daily-news).
+
 ## Installation
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/daily-news.git
+git clone https://github.com/DevTomek-pl/daily-news.git
 cd daily-news
 ```
 
