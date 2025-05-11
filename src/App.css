@@ -73,6 +73,10 @@ body {
 .loading-more {
   text-align: center;
   padding: 2rem;
+  max-width: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
   font-size: 1rem;
   color: #2196f3;
   width: 100%;
